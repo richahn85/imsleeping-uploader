@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<title>imsleeping uploader – 인증 전달</title>
+</head>
+<body style="font-family:'Malgun Gothic',system-ui,sans-serif;max-width:560px;margin:48px auto;padding:0 16px">
+<p id="msg">인증 결과를 이 PC의 업로더로 전달하는 중입니다…</p>
+<script>
+  // OAuth 리디렉션은 HTTPS 여야 해서 이 페이지가 받은 뒤, 같은 PC에서 대기 중인 로컬 업로더로 그대로 넘깁니다.
+  // 이 페이지는 아무 데이터도 저장하거나 외부로 보내지 않습니다.
+  var ports = { meta: 8765, threads: 8766 };
+  var q = new URLSearchParams(location.search);
+  var target = q.get("state") && q.get("state").split(".")[0];
+  if (ports[target]) {
+    location.replace("http://localhost:" + ports[target] + "/" + target + "/callback" + location.search);
+  } else {
+    document.getElementById("msg").textContent = "전달할 대상이 없습니다. 업로더에서 인증을 다시 시작하세요.";
+  }
+</script>
+</body>
+</html>
